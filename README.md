@@ -585,4 +585,4 @@ Changes are tracked in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
-[MIT](LICENSE) © 2026 Ray Tien.
+[MIT](LICENSE)
