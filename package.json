@@ -2,6 +2,8 @@
 	"name": "nuxt-sharekit-workspace",
 	"private": true,
 	"type": "module",
+	"license": "MIT",
+	"repository": "github:Ray0907/nuxt-sharekit",
 	"packageManager": "pnpm@10.33.2",
 	"engines": {
 		"node": ">=22"
@@ -14,10 +16,16 @@
 		"lint": "eslint .",
 		"prepare": "pnpm run build:packages",
 		"test": "pnpm run build:packages && pnpm --filter @nuxt-sharekit/core test && pnpm --filter nuxt-sharekit test && pnpm --filter nuxt-sharekit-docs test",
-		"typecheck": "pnpm run build:packages && pnpm --filter @nuxt-sharekit/core typecheck && pnpm --filter nuxt-sharekit typecheck && pnpm --filter nuxt-sharekit-playground typecheck && pnpm --filter nuxt-sharekit-docs typecheck"
+		"test:browser": "playwright test",
+		"typecheck": "pnpm run build:packages && pnpm --filter @nuxt-sharekit/core typecheck && pnpm --filter nuxt-sharekit typecheck && pnpm --filter nuxt-sharekit-playground typecheck && pnpm --filter nuxt-sharekit-docs typecheck",
+		"verify:install": "node scripts/verify-clean-install.mjs",
+		"verify:release": "node scripts/verify-release.mjs",
+		"verify:replacement": "pnpm lint && pnpm test && pnpm typecheck && pnpm build && pnpm test:browser && pnpm verify:install && pnpm verify:release"
 	},
 	"devDependencies": {
+		"@axe-core/playwright": "4.12.1",
 		"@nuxt/eslint-config": "1.16.0",
+		"@playwright/test": "1.61.1",
 		"@types/node": "26.1.1",
 		"eslint": "10.7.0",
 		"typescript": "5.9.3",

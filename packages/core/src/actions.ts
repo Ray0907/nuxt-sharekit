@@ -113,7 +113,7 @@ export function openShareIntent(
 	const popup_opened = adapter_intent.openPopup(
 		intent_share.url,
 		`nuxt-sharekit-${intent_share.providerId}`,
-		'popup=yes,width=640,height=560,noopener,noreferrer',
+		'popup=yes,width=640,height=560',
 	)
 
 	return {

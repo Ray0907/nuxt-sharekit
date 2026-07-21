@@ -3,6 +3,7 @@ export {
 	getShareProvider,
 	listShareProviders,
 	normalizeSharePayload,
+	shareProviderAliases,
 	shareProviders,
 } from './providers.js'
 

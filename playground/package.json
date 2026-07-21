@@ -8,6 +8,7 @@
 		"typecheck": "nuxt typecheck"
 	},
 	"dependencies": {
+		"@nuxt-sharekit/core": "workspace:*",
 		"nuxt": "4.5.0",
 		"nuxt-sharekit": "workspace:*",
 		"vue": "3.5.40"

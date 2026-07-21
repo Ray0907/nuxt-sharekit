@@ -105,9 +105,14 @@ export function useShare(
 
 			const adapter_intent: IntentAdapter = {}
 			if (typeof window !== 'undefined') {
-				adapter_intent.openPopup = (url, name, features) => (
-					window.open(url, name, features)
-				)
+				adapter_intent.openPopup = (url, name, features) => {
+					const popup_share = window.open('', name, features)
+					if (!popup_share) return null
+
+					popup_share.opener = null
+					popup_share.location.replace(url)
+					return popup_share
+				}
 				adapter_intent.navigate = url => window.location.assign(url)
 			}
 			return setResult(openShareIntent(intent_share, adapter_intent))

@@ -22,8 +22,19 @@ describe('provider presets', () => {
 			'whatsapp',
 			'telegram',
 			'line',
+			'viber',
 			'email',
 			'sms',
+		])
+	})
+
+	it('keeps AI destinations in an explicit opt-in preset', () => {
+		expect(getSharePreset('ask-ai')).toEqual([
+			'chatgpt',
+			'claude',
+			'gemini',
+			'perplexity',
+			'grok',
 		])
 	})
 
@@ -97,6 +108,18 @@ describe('custom providers', () => {
 
 		expect(() => createShareRegistry([provider_duplicate])).toThrow(
 			'Duplicate provider id: x',
+		)
+
+		const provider_alias = defineShareProvider({
+			id: 'twitter',
+			label: 'Duplicate Twitter',
+			category: 'social',
+			icon: 'lucide:send',
+			fields: ['url'],
+			buildUrl: payload => payload.url,
+		})
+		expect(() => createShareRegistry([provider_alias])).toThrow(
+			'Duplicate provider id: twitter',
 		)
 
 		const provider_unsafe = defineShareProvider({

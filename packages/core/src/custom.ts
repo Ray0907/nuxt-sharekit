@@ -1,4 +1,8 @@
-import { normalizeSharePayload, shareProviders } from './providers.js'
+import {
+	normalizeSharePayload,
+	shareProviderAliases,
+	shareProviders,
+} from './providers.js'
 import type {
 	ShareIntent,
 	ShareIntentTarget,
@@ -85,6 +89,14 @@ export function createShareRegistry(
 			throw new TypeError(`Duplicate provider id: ${provider_share.id}`)
 		}
 		providers_by_id.set(provider_share.id, provider_share)
+	}
+
+	for (const [id_alias, id_provider] of Object.entries(shareProviderAliases)) {
+		if (providers_by_id.has(id_alias)) {
+			throw new TypeError(`Duplicate provider id: ${id_alias}`)
+		}
+		const provider_share = providers_by_id.get(id_provider)
+		if (provider_share) providers_by_id.set(id_alias, provider_share)
 	}
 
 	return {

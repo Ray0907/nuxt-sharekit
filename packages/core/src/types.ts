@@ -6,12 +6,14 @@ export type ShareField
 		| 'hashtags'
 		| 'via'
 		| 'instance'
+		| 'prompt'
 
 export type ShareProviderCategory
 	= | 'social'
 		| 'professional'
 		| 'messaging'
 		| 'communication'
+		| 'ai'
 		| 'read-later'
 
 export type ShareFallback = 'copy' | 'native' | 'none'
@@ -26,6 +28,7 @@ export interface SharePayload {
 	hashtags?: readonly string[]
 	via?: string
 	instance?: string
+	prompt?: string
 }
 
 export interface ShareIntent {

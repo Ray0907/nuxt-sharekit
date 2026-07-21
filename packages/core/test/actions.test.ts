@@ -54,7 +54,7 @@ describe('native share action', () => {
 })
 
 describe('provider intent action', () => {
-	it('opens popup intents with safe isolation features', () => {
+	it('opens popup intents through an adapter that owns opener isolation', () => {
 		const openPopup = vi.fn().mockReturnValue({ closed: false })
 		const intent_share = createShareIntent('x', payload_share)
 		const result_action = openShareIntent(intent_share!, { openPopup })
@@ -62,7 +62,7 @@ describe('provider intent action', () => {
 		expect(openPopup).toHaveBeenCalledWith(
 			intent_share!.url,
 			'nuxt-sharekit-x',
-			'popup=yes,width=640,height=560,noopener,noreferrer',
+			'popup=yes,width=640,height=560',
 		)
 		expect(result_action).toEqual({
 			method: 'provider',

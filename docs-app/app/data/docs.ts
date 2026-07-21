@@ -86,7 +86,7 @@ const payload_share = {
 	{
 		slug: 'components',
 		title: 'Components',
-		description: 'Buttons, groups, QR, and an accessible Reka-powered share menu.',
+		description: 'Links, buttons, groups, QR, and an accessible native share menu.',
 		sections: [
 			{
 				title: 'ShareButton',
@@ -100,7 +100,7 @@ const payload_share = {
 			},
 			{
 				title: 'ShareGroup and ShareMenu',
-				body: 'ShareGroup exposes provider slots and copy/native actions. ShareMenu uses Reka UI for focus management and menu keyboard behavior.',
+				body: 'ShareGroup exposes provider slots and copy/native actions. ShareMenu uses a native disclosure with Escape handling and focus restoration.',
 			},
 			{
 				title: 'ShareQr',
@@ -195,7 +195,7 @@ const registry_share = createShareRegistry([provider_acme])`,
 				title: 'Included behavior',
 				body: 'ShareKit starts with native semantics and uses ARIA only where it clarifies state.',
 				items: [
-					'Keyboard-operable buttons and Reka-managed menu focus.',
+					'Keyboard-operable buttons and native disclosure focus behavior.',
 					'Visible 3px focus rings and minimum 44px targets.',
 					'Accessible names independent from provider icons.',
 					'Polite announcements for success, cancellation, and failure.',

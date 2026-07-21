@@ -7,8 +7,15 @@ All notable changes to this project are documented here.
 ### Added
 
 - Framework-agnostic provider, preset, custom registry, and browser action engine.
-- 22 provider intents with capability, fallback, status, and verification metadata.
-- Nuxt 4 module with `ShareButton`, `ShareGroup`, `ShareMenu`, and `ShareQr`.
+- 27 provider intents with capability, fallback, status, and verification metadata.
+- Nuxt 4 module with `ShareButton`, `ShareGroup`, `ShareLink`, `ShareMenu`, and `ShareQr`.
 - `useShare` composable with explicit browser result states.
+- `SocialShare` and `useSocialShare` compatibility APIs with `twitter` and `vkontakte` aliases.
+- No-JavaScript share links, built-in provider icons, and a native disclosure menu.
 - WCAG 2.2 AA-oriented semantics, focus, target size, announcements, and reduced motion.
 - Nuxt 4 playground and Tailwind CSS v4 + Reka UI documentation workbench.
+
+### Changed
+
+- Reka UI is no longer a runtime dependency of `nuxt-sharekit`.
+- Provider popups detach `window.opener` without suppressing the popup handle.
