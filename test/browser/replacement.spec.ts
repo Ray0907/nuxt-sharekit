@@ -19,7 +19,7 @@ test('opens a provider popup without reporting it as blocked', async ({ context,
 	await popup_share.close()
 })
 
-test('copies and invokes native sharing through browser boundaries', async ({ context, page }) => {
+test('@chromium-only copies and invokes native sharing', async ({ context, page }) => {
 	await context.grantPermissions(['clipboard-read', 'clipboard-write'])
 	await page.addInitScript(() => {
 		Object.defineProperty(navigator, 'canShare', {
@@ -44,27 +44,36 @@ test('copies and invokes native sharing through browser boundaries', async ({ co
 	await expect(page.getByTestId('share-result')).toHaveText('native:shared')
 })
 
-test('keeps provider, email, SMS, and compatibility links without JavaScript', async ({ browser }) => {
-	const context_no_js = await browser.newContext({ javaScriptEnabled: false })
-	const page_no_js = await context_no_js.newPage()
-	await page_no_js.goto('/')
+test(
+	'keeps provider, email, SMS, and compatibility links without JavaScript',
+	async ({ browser }) => {
+		const context_no_js = await browser.newContext({ javaScriptEnabled: false })
+		const page_no_js = await context_no_js.newPage()
+		await page_no_js.goto('/')
 
-	await expect(page_no_js.locator('#share-link-x')).toHaveAttribute(
-		'href',
-		/https:\/\/x\.com\/intent\/tweet/,
-	)
-	await expect(page_no_js.locator('#share-link-email')).toHaveAttribute('href', /^mailto:/)
-	await expect(page_no_js.locator('#share-link-sms')).toHaveAttribute('href', /^sms:/)
-	await expect(page_no_js.locator('#social-share-twitter')).toHaveAttribute(
-		'href',
-		/https:\/\/x\.com\/intent\/tweet/,
-	)
-	await expect(page_no_js.locator('#legacy-composable-twitter')).toHaveAttribute(
-		'href',
-		/https:\/\/x\.com\/intent\/tweet/,
-	)
-	await context_no_js.close()
-})
+		await expect(page_no_js.locator('#share-link-x')).toHaveAttribute(
+			'href',
+			/https:\/\/x\.com\/intent\/tweet/,
+		)
+		await expect(page_no_js.locator('#share-link-email')).toHaveAttribute(
+			'href',
+			/^mailto:/,
+		)
+		await expect(page_no_js.locator('#share-link-sms')).toHaveAttribute(
+			'href',
+			/^sms:/,
+		)
+		await expect(page_no_js.locator('#social-share-twitter')).toHaveAttribute(
+			'href',
+			/https:\/\/x\.com\/intent\/tweet/,
+		)
+		await expect(page_no_js.locator('#legacy-composable-twitter')).toHaveAttribute(
+			'href',
+			/https:\/\/x\.com\/intent\/tweet/,
+		)
+		await context_no_js.close()
+	},
+)
 
 test('exposes email and SMS protocol targets in a hydrated browser', async ({ page }) => {
 	await page.goto('/')
@@ -74,7 +83,33 @@ test('exposes email and SMS protocol targets in a hydrated browser', async ({ pa
 	await expect(page.locator('#share-link-sms')).toHaveAttribute('href', /^sms:/)
 })
 
-test('supports keyboard disclosure behavior and WCAG automation', async ({ page }) => {
+test('preserves the upstream legacy component and composable contract', async ({ page }) => {
+	await page.goto('/')
+	await waitForHydration(page)
+
+	const link_twitter = page.locator('#social-share-twitter')
+	await expect(link_twitter).toHaveClass(/social-share-button/)
+	await expect(link_twitter).toHaveClass(/social-share-button--twitter/)
+	await expect(link_twitter).toHaveClass(/social-share-button--styled/)
+	await expect(link_twitter).toHaveAttribute('target', '_blank')
+	await expect(link_twitter).toHaveAttribute('style', /--color-brand:\s?#000000/)
+	await expect(link_twitter.locator('.social-share-button__icon')).toHaveCount(1)
+
+	const link_email = page.locator('#social-share-email')
+	await expect(link_email).toHaveAttribute('aria-label', 'Send with Email')
+	await expect(link_email.locator('.social-share-button__label')).toHaveText('Send')
+
+	await expect(page.locator('#social-share-mastodon')).toHaveAttribute(
+		'href',
+		/^https:\/\/mastodonshare\.com\//,
+	)
+	const data_raindrop = page.locator('#legacy-raindrop-data')
+	await expect(data_raindrop).toHaveAttribute('data-name', 'Raindrop')
+	await expect(data_raindrop).toHaveAttribute('data-view-box', '0 0 48 48')
+	await expect(data_raindrop).toHaveAttribute('data-path', /^M24 7\.14/)
+})
+
+test('supports keyboard disclosure behavior and WCAG automation', async ({ page }, test_info) => {
 	await page.goto('/')
 	await waitForHydration(page)
 	const trigger_menu = page.getByRole('region', { name: 'Compact menu' }).locator('summary')
@@ -82,7 +117,8 @@ test('supports keyboard disclosure behavior and WCAG automation', async ({ page 
 	await trigger_menu.focus()
 	await page.keyboard.press('Enter')
 	await expect(trigger_menu.locator('..')).toHaveAttribute('open', '')
-	await page.keyboard.press('Tab')
+	const key_next = test_info.project.name === 'webkit' ? 'Alt+Tab' : 'Tab'
+	await page.keyboard.press(key_next)
 	await expect(page.getByRole('button', { name: 'X', exact: true })).toBeFocused()
 	await page.keyboard.press('Escape')
 	await expect(trigger_menu.locator('..')).not.toHaveAttribute('open', '')
@@ -97,7 +133,7 @@ test('supports keyboard disclosure behavior and WCAG automation', async ({ page 
 	expect(results_a11y.violations).toEqual([])
 })
 
-test('renders default runtime icons instead of placeholder initials', async ({ page }) => {
+test('@chromium-only renders the default runtime snapshot', async ({ page }) => {
 	await page.goto('/')
 	await waitForHydration(page)
 	const group_share = page.getByRole('group', { name: 'Share this page' })

@@ -45,7 +45,10 @@ const share_x = useSocialShare({
 
 The compatibility result retains `name`, `shareUrl`, `icon`, `color`, and
 `category`. The `twitter` and `vkontakte` ids resolve to ShareKit's canonical
-`x` and `vk` providers.
+`x` and `vk` providers. Existing rendered HTML hooks are retained, including
+the `social-share-button` classes and local `--color-brand` custom property.
+Mastodon continues to work without configuration through an instance chooser;
+an explicit instance remains available through the new ShareKit payload.
 
 ## Adopt the new APIs incrementally
 

@@ -57,7 +57,30 @@ describe('provider registry', () => {
 
 		expect(provider_pinterest?.fields).toEqual(['url', 'text', 'media'])
 		expect(provider_pinterest?.fallback).toBe('copy')
-		expect(getShareProvider('mastodon')?.status).toBe('setup-required')
+		expect(getShareProvider('mastodon')?.status).toBe('active')
+	})
+
+	it('covers every field supported by the upstream 24-provider contract', () => {
+		const fields_expected = {
+			x: ['url', 'text', 'hashtags', 'via'],
+			pinterest: ['url', 'text', 'media'],
+			reddit: ['url', 'title'],
+			threads: ['url', 'text'],
+			tumblr: ['url', 'title', 'text', 'media', 'hashtags'],
+			hackernews: ['url', 'title'],
+			whatsapp: ['url', 'text'],
+			telegram: ['url', 'text'],
+			line: ['url', 'text'],
+			viber: ['url', 'title', 'text'],
+			email: ['url', 'title', 'text'],
+			mastodon: ['url', 'text', 'instance'],
+			raindrop: ['url', 'title'],
+			vk: ['url', 'title', 'text', 'media'],
+		} as const
+
+		for (const [id_provider, fields_provider] of Object.entries(fields_expected)) {
+			expect(getShareProvider(id_provider)?.fields).toEqual(fields_provider)
+		}
 	})
 
 	it('returns undefined for unknown providers', () => {
@@ -129,14 +152,31 @@ describe('share intents', () => {
 		)
 	})
 
-	it('requires a Mastodon instance and rejects unsafe instance protocols', () => {
-		expect(() => createShareIntent('mastodon', payload_complete)).toThrow(
-			'Mastodon requires an instance URL',
-		)
+	it('uses a Mastodon chooser and accepts an optional safe instance', () => {
+		const intent_chooser = createShareIntent('mastodon', payload_complete)
+		const intent_instance = createShareIntent('mastodon', {
+			...payload_complete,
+			instance: 'https://mastodon.social',
+		})
+
+		expect(intent_chooser?.url).toContain('https://mastodonshare.com/')
+		expect(intent_chooser?.url).toContain('url=')
+		expect(intent_instance?.url).toContain('https://mastodon.social/share?')
 		expect(() => createShareIntent('mastodon', {
 			...payload_complete,
 			instance: 'javascript:alert(1)',
 		})).toThrow('Mastodon instances must use http or https')
+	})
+
+	it('forwards the upstream LINE and Tumblr optional fields', () => {
+		const intent_line = createShareIntent('line', payload_complete)
+		const intent_tumblr = createShareIntent('tumblr', payload_complete)
+		const url_line = new URL(intent_line?.url ?? '')
+		const url_tumblr = new URL(intent_tumblr?.url ?? '')
+
+		expect(url_line.searchParams.get('text')).toBe(payload_complete.text)
+		expect(url_tumblr.searchParams.get('content')).toBe(payload_complete.media)
+		expect(url_tumblr.searchParams.get('tags')).toBe('Nuxt,Vue')
 	})
 
 	it('builds mail and SMS intents without forcing popup behavior', () => {

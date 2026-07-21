@@ -1,10 +1,10 @@
 # Replacement matrix
 
 This matrix pins replacement scope to the 24 networks on the upstream
-`nuxt-social-share` `main` branch as checked on 2026-07-21. It is a share-intent
+`nuxt-social-share` v3.1.0 as checked on 2026-07-21. It is a share-intent
 matrix, not a social publishing or account-management API.
 
-Source: [upstream network index](https://github.com/stefanobartoletti/nuxt-social-share/tree/main/src/runtime/networks)
+Source: [upstream network index](https://github.com/stefanobartoletti/nuxt-social-share/tree/v3.1.0/src/runtime/networks)
 
 | Upstream network | ShareKit id | Decision |
 | --- | --- | --- |
@@ -15,14 +15,14 @@ Source: [upstream network index](https://github.com/stefanobartoletti/nuxt-socia
 | Reddit | `reddit` | Implemented |
 | Bluesky | `bluesky` | Implemented |
 | Threads | `threads` | Implemented |
-| Mastodon | `mastodon` | Implemented; instance is required |
+| Mastodon | `mastodon` | Implemented; chooser fallback and optional instance |
 | VKontakte | `vk` | Implemented; `vkontakte` alias included |
 | Xing | `xing` | Implemented |
-| Tumblr | `tumblr` | Implemented |
+| Tumblr | `tumblr` | Implemented with title, image, and hashtags |
 | Hacker News | `hackernews` | Implemented |
 | WhatsApp | `whatsapp` | Implemented |
 | Telegram | `telegram` | Implemented |
-| LINE | `line` | Implemented |
+| LINE | `line` | Implemented with optional text |
 | Viber | `viber` | Implemented |
 | Email | `email` | Implemented with `mailto:` |
 | Instapaper | `instapaper` | Implemented |

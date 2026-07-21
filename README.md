@@ -204,7 +204,7 @@ interface SharePayload {
 | `media` | Absolute or base-resolvable HTTP/HTTPS image URL. |
 | `hashtags` | Tags with or without `#`; values are trimmed and de-duplicated. |
 | `via` | Attribution handle with or without `@`. |
-| `instance` | Mastodon instance URL, such as `https://mastodon.social`. |
+| `instance` | Optional Mastodon instance URL, such as `https://mastodon.social`. |
 | `prompt` | Optional instruction prepended to AI provider URLs. |
 
 Payload normalization rejects non-HTTP protocols for web and media URLs. Provider parameters are
@@ -362,12 +362,12 @@ ShareKit includes these providers:
 | `reddit` | Social | URL, title | all | Active |
 | `threads` | Social | URL, text | all | Active |
 | `bluesky` | Social | URL, text | recommended | Active |
-| `mastodon` | Social | URL, text, instance | all | Setup required |
-| `tumblr` | Social | URL, title, text | all | Active |
+| `mastodon` | Social | URL, text, instance | all | Active |
+| `tumblr` | Social | URL, title, text, media, hashtags | all | Active |
 | `hackernews` | Social | URL, title | all | Active |
 | `whatsapp` | Messaging | URL, text | recommended, messaging | Active |
 | `telegram` | Messaging | URL, text | messaging | Active |
-| `line` | Messaging | URL | messaging | Active |
+| `line` | Messaging | URL, text | messaging | Active |
 | `viber` | Messaging | URL, title, text | messaging | Active |
 | `email` | Communication | URL, title, text | recommended, messaging | Active |
 | `sms` | Communication | URL, text | messaging | Active |
@@ -401,7 +401,9 @@ Copy link, native Web Share, and QR are actions, not providers.
 
 ### Mastodon
 
-Mastodon needs the user's instance because there is no single global compose endpoint:
+Without an instance, Mastodon opens the same instance chooser used by
+`nuxt-social-share`. Pass an instance to skip the chooser and open its compose
+screen directly:
 
 ```vue
 <ShareButton
@@ -569,8 +571,8 @@ Accessibility depends on the final application. If you use headless mode or repl
 names, focus order, contrast, target size, reduced motion, and status announcements again.
 
 The Playwright gate runs axe against WCAG A/AA tags, asserts the color-contrast rule executed,
-and separately verifies keyboard behavior in Chromium. This supports the runtime claim; it does
-not certify arbitrary consumer slot content.
+and verifies keyboard behavior in Chromium, Firefox, and WebKit. This supports the runtime claim;
+it does not certify arbitrary consumer slot content.
 
 ## Architecture
 
@@ -620,7 +622,8 @@ The current suite covers:
 - Copy, native share, popup, blocked, unsupported, and cancelled results.
 - Module registration, options, component behavior, and Nuxt 4 SSR integration.
 - Documentation homepage SSR output.
-- Chromium popup, copy, native, Email, SMS, no-JavaScript, keyboard, axe, and visual behavior.
+- Chromium, Firefox, and WebKit popup, Email, SMS, no-JavaScript, keyboard, and axe behavior.
+- Chromium clipboard, simulated native-share boundary, and visual snapshot behavior.
 - Packed-package contents and a clean Nuxt 4 production build.
 
 ## Contributing and security
