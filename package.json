@@ -1,0 +1,26 @@
+{
+	"name": "nuxt-sharekit-workspace",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@10.33.2",
+	"engines": {
+		"node": ">=22"
+	},
+	"scripts": {
+		"build": "pnpm run build:packages && pnpm --filter nuxt-sharekit-playground build && pnpm --filter nuxt-sharekit-docs build",
+		"build:packages": "pnpm --filter @nuxt-sharekit/core build && pnpm --filter nuxt-sharekit build",
+		"dev": "pnpm --filter nuxt-sharekit-docs dev",
+		"dev:playground": "pnpm --filter nuxt-sharekit-playground dev",
+		"lint": "eslint .",
+		"prepare": "pnpm run build:packages",
+		"test": "pnpm run build:packages && pnpm --filter @nuxt-sharekit/core test && pnpm --filter nuxt-sharekit test && pnpm --filter nuxt-sharekit-docs test",
+		"typecheck": "pnpm run build:packages && pnpm --filter @nuxt-sharekit/core typecheck && pnpm --filter nuxt-sharekit typecheck && pnpm --filter nuxt-sharekit-playground typecheck && pnpm --filter nuxt-sharekit-docs typecheck"
+	},
+	"devDependencies": {
+		"@nuxt/eslint-config": "1.16.0",
+		"@types/node": "26.1.1",
+		"eslint": "10.7.0",
+		"typescript": "5.9.3",
+		"vitest": "4.1.10"
+	}
+}

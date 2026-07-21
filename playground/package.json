@@ -1,0 +1,15 @@
+{
+	"name": "nuxt-sharekit-playground",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev",
+		"typecheck": "nuxt typecheck"
+	},
+	"dependencies": {
+		"nuxt": "4.5.0",
+		"nuxt-sharekit": "workspace:*",
+		"vue": "3.5.40"
+	}
+}
