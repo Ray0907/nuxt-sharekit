@@ -11,5 +11,5 @@ const intent_share = createShareIntent('bluesky', {
 })
 ```
 
-See the workspace [README](../../README.md) for providers, custom registries, actions, and
-development instructions.
+See the [full documentation](https://github.com/Ray0907/nuxt-sharekit#readme) for providers,
+custom registries, actions, and development instructions.
