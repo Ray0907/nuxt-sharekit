@@ -1,0 +1,36 @@
+{
+	"name": "@nuxt-sharekit/core",
+	"version": "0.1.0",
+	"description": "Framework-agnostic share intent engine for Nuxt ShareKit.",
+	"license": "MIT",
+	"keywords": [
+		"share",
+		"social",
+		"typescript",
+		"nuxt"
+	],
+	"type": "module",
+	"sideEffects": false,
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit"
+	},
+	"engines": {
+		"node": ">=22"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}
