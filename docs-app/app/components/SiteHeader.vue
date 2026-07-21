@@ -47,11 +47,11 @@ function toggleColorMode(): void {
 
 			<div class="flex items-center gap-1.5">
 				<a
-					href="https://github.com"
+					href="https://github.com/Ray0907/nuxt-sharekit"
 					target="_blank"
 					rel="noreferrer"
 					class="hidden size-11 place-items-center rounded-control text-muted hover:bg-surface hover:text-ink sm:grid"
-					aria-label="Open GitHub"
+					aria-label="View Nuxt ShareKit on GitHub"
 				>
 					<Icon
 						name="simple-icons:github"

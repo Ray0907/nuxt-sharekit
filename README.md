@@ -7,6 +7,9 @@
 
 Social sharing that fits your product. Beautiful defaults, headless when you need it.
 
+[Documentation](https://ray0907.github.io/nuxt-sharekit/) ·
+[npm](https://www.npmjs.com/package/nuxt-sharekit)
+
 Nuxt ShareKit is an accessible, headless-friendly social sharing module built for Nuxt 4.
 It combines a framework-agnostic TypeScript intent engine with Vue components, a composable,
 browser fallbacks, native sharing, copy link, and SSR-safe QR codes.
