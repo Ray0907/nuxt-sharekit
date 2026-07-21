@@ -11,7 +11,7 @@ Nuxt ShareKit is an accessible, headless-friendly social sharing module built fo
 It combines a framework-agnostic TypeScript intent engine with Vue components, a composable,
 browser fallbacks, native sharing, copy link, and SSR-safe QR codes.
 
-> **Project status:** source-ready preview. The packages have not been published to npm yet.
+> **Current release:** `0.1.0` for Nuxt 4.
 
 ## Snapshot
 
@@ -103,7 +103,7 @@ extension point for one.
 
 ## Installation
 
-Once the package is published to npm, install it with the Nuxt CLI:
+Install it with the Nuxt CLI:
 
 ```bash
 pnpm dlx nuxi@latest module add nuxt-sharekit

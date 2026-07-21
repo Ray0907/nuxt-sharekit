@@ -15,5 +15,7 @@ pnpm dlx nuxi@latest module add nuxt-sharekit
 />
 ```
 
-The module registers `ShareButton`, `ShareGroup`, `ShareMenu`, and `ShareQr`, and auto-imports
-`useShare`. See the workspace [README](../../README.md) for the full API and provider matrix.
+The module registers `ShareButton`, `ShareGroup`, `ShareLink`, `ShareMenu`, and `ShareQr`, and
+auto-imports `useShare`. See the
+[full documentation](https://github.com/Ray0907/nuxt-sharekit#readme) for the API, provider
+matrix, headless usage, accessibility contract, and migration guide.
