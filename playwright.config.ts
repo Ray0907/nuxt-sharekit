@@ -16,6 +16,16 @@ export default defineConfig({
 			name: 'chromium',
 			use: { ...devices['Desktop Chrome'] },
 		},
+		{
+			name: 'firefox',
+			grepInvert: /@chromium-only/,
+			use: { ...devices['Desktop Firefox'] },
+		},
+		{
+			name: 'webkit',
+			grepInvert: /@chromium-only/,
+			use: { ...devices['Desktop Safari'] },
+		},
 	],
 	webServer: {
 		command: 'pnpm --filter nuxt-sharekit-playground dev --host 127.0.0.1 --port 4300',

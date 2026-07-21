@@ -206,9 +206,13 @@ export const shareProviders: readonly ShareProvider[] = [
 		category: 'social',
 		icon: 'simple-icons:mastodon',
 		fields: ['url', 'text', 'instance'],
-		status: 'setup-required',
 		buildUrl(payload) {
-			if (!payload.instance) throw new TypeError('Mastodon requires an instance URL')
+			if (!payload.instance) {
+				return createWebIntentUrl('https://mastodonshare.com/', {
+					url: payload.url,
+					text: payload.text || payload.title,
+				})
+			}
 
 			const instance_url = resolveWebUrl(
 				payload.instance,
@@ -225,13 +229,15 @@ export const shareProviders: readonly ShareProvider[] = [
 		label: 'Tumblr',
 		category: 'social',
 		icon: 'simple-icons:tumblr',
-		fields: ['url', 'title', 'text'],
+		fields: ['url', 'title', 'text', 'media', 'hashtags'],
 		buildUrl: payload => createWebIntentUrl(
 			'https://www.tumblr.com/widgets/share/tool',
 			{
 				canonicalUrl: payload.url,
 				title: payload.title,
 				caption: payload.text,
+				content: payload.media,
+				tags: payload.hashtags?.join(','),
 			},
 		),
 	}),
@@ -272,10 +278,13 @@ export const shareProviders: readonly ShareProvider[] = [
 		label: 'LINE',
 		category: 'messaging',
 		icon: 'simple-icons:line',
-		fields: ['url'],
+		fields: ['url', 'text'],
 		buildUrl: payload => createWebIntentUrl(
 			'https://social-plugins.line.me/lineit/share',
-			{ url: payload.url },
+			{
+				url: payload.url,
+				text: payload.text || payload.title,
+			},
 		),
 	}),
 	defineProvider({

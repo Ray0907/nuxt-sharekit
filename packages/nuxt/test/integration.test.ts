@@ -15,5 +15,8 @@ describe('Nuxt 4 integration', async () => {
 		expect(html_page).toContain('Nuxt ShareKit playground')
 		expect(html_page).toContain('data-provider="x"')
 		expect(html_page).toContain('Copy link')
+		expect(html_page).toContain('social-share-button--twitter')
+		expect(html_page).toContain('Send with Email')
+		expect(html_page).toContain('https://mastodonshare.com/')
 	})
 })

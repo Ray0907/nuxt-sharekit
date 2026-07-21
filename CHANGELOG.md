@@ -19,3 +19,7 @@ All notable changes to this project are documented here.
 
 - Reka UI is no longer a runtime dependency of `nuxt-sharekit`.
 - Provider popups detach `window.opener` without suppressing the popup handle.
+- Legacy output now preserves the upstream component classes, labels, brand variable, and icons.
+- Mastodon works through an instance chooser by default, while direct instances remain optional.
+- LINE text and Tumblr media and hashtag fields now match the upstream provider contract.
+- Browser gates now cover Chromium, Firefox, and WebKit with a cross-platform visual font.

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '@fontsource-variable/geist'
 import type { ShareActionResult } from '@nuxt-sharekit/core'
 
 const payload_share = {
@@ -12,6 +13,11 @@ const legacy_share = useSocialShare({
 	network: 'twitter',
 	url: 'https://example.com/legacy-composable',
 	title: 'Legacy composable compatibility',
+})
+const legacy_raindrop = useSocialShare({
+	network: 'raindrop',
+	url: 'https://example.com/legacy-raindrop',
+	title: 'Legacy icon compatibility',
 })
 
 useHead({
@@ -72,6 +78,14 @@ function handleResult(result_share: ShareActionResult): void {
 				Progressive links and compatibility
 			</h2>
 			<div class="links">
+				<span
+					v-if="legacy_raindrop"
+					id="legacy-raindrop-data"
+					hidden
+					:data-name="legacy_raindrop.name"
+					:data-view-box="legacy_raindrop.icon.viewBox"
+					:data-path="legacy_raindrop.icon.path"
+				/>
 				<a
 					v-if="legacy_share"
 					id="legacy-composable-twitter"
@@ -101,6 +115,18 @@ function handleResult(result_share: ShareActionResult): void {
 					title="Compatibility layer"
 					styled
 				/>
+				<SocialShare
+					id="social-share-email"
+					network="email"
+					url="https://example.com/compatibility"
+					title="Compatibility layer"
+				/>
+				<SocialShare
+					id="social-share-mastodon"
+					network="mastodon"
+					url="https://example.com/compatibility"
+					title="Compatibility layer"
+				/>
 			</div>
 		</section>
 	</main>
@@ -108,7 +134,7 @@ function handleResult(result_share: ShareActionResult): void {
 
 <style>
 :root {
-	font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+	font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
 	color: var(--share-text);
 	background: var(--share-bg-muted);
 }
