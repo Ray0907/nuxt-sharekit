@@ -7,16 +7,45 @@
 
 Social sharing that fits your product. Beautiful defaults, headless when you need it.
 
-![Nuxt ShareKit documentation and component builder](docs/design/home-desktop-light.png)
-
 Nuxt ShareKit is an accessible, headless-friendly social sharing module built for Nuxt 4.
 It combines a framework-agnostic TypeScript intent engine with Vue components, a composable,
 browser fallbacks, native sharing, copy link, and SSR-safe QR codes.
 
 > **Project status:** source-ready preview. The packages have not been published to npm yet.
 
+## Snapshot
+
+<picture>
+	<source
+		media="(prefers-color-scheme: dark)"
+		srcset="docs/design/home-desktop-dark.png"
+	>
+	<source
+		media="(prefers-color-scheme: light)"
+		srcset="docs/design/home-desktop-light.png"
+	>
+	<img
+		alt="Nuxt ShareKit documentation and interactive component builder"
+		src="docs/design/home-desktop-light.png"
+	>
+</picture>
+
+The snapshot is captured from the real Nuxt 4 documentation app and component builder. GitHub
+automatically selects the matching light or dark version.
+
+<details>
+<summary>View mobile snapshot</summary>
+<br>
+<img
+	alt="Nuxt ShareKit documentation on a mobile viewport"
+	src="docs/design/home-mobile-light.png"
+	width="390"
+>
+</details>
+
 ## Contents
 
+- [Snapshot](#snapshot)
 - [Why ShareKit](#why-sharekit)
 - [Requirements](#requirements)
 - [Installation](#installation)
