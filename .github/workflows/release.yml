@@ -25,9 +25,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 24.15.0
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -38,12 +37,18 @@ jobs:
       - name: Verify release candidate
         run: pnpm verify:replacement
 
+      - name: Pack release artifacts
+        run: |
+          mkdir -p .release
+          pnpm --filter @nuxt-sharekit/core pack --pack-destination "$GITHUB_WORKSPACE/.release"
+          pnpm --filter nuxt-sharekit pack --pack-destination "$GITHUB_WORKSPACE/.release"
+
       - name: Publish core
-        run: pnpm --filter @nuxt-sharekit/core publish --access public --provenance --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: >-
+          pnpm --package=npm@12.0.1 dlx npm publish
+          .release/nuxt-sharekit-core-*.tgz --access public
 
       - name: Publish Nuxt module
-        run: pnpm --filter nuxt-sharekit publish --access public --provenance --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: >-
+          pnpm --package=npm@12.0.1 dlx npm publish
+          .release/nuxt-sharekit-[0-9]*.tgz --access public
