@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 import ShareButton from '../src/runtime/components/ShareButton.vue'
 import ShareGroup from '../src/runtime/components/ShareGroup.vue'
+import ShareLink from '../src/runtime/components/ShareLink.vue'
 import ShareMenu from '../src/runtime/components/ShareMenu.vue'
 import ShareQr from '../src/runtime/components/ShareQr.vue'
 import { useShare } from '../src/runtime/composables/useShare'
@@ -19,7 +20,12 @@ afterEach(() => {
 
 describe('ShareButton', () => {
 	it('renders a named native button and opens a provider intent', async () => {
-		const open_window = vi.spyOn(window, 'open').mockReturnValue({} as Window)
+		const replace_location = vi.fn()
+		const popup_window = {
+			opener: window,
+			location: { replace: replace_location },
+		} as unknown as Window
+		const open_window = vi.spyOn(window, 'open').mockReturnValue(popup_window)
 		const wrapper_button = mount(ShareButton, {
 			props: {
 				provider: 'x',
@@ -34,6 +40,10 @@ describe('ShareButton', () => {
 		await flushPromises()
 
 		expect(open_window).toHaveBeenCalledOnce()
+		expect(popup_window.opener).toBeNull()
+		expect(replace_location).toHaveBeenCalledWith(
+			expect.stringContaining('https://x.com/intent/tweet'),
+		)
 		expect(wrapper_button.emitted('result')?.[0]?.[0]).toMatchObject({
 			providerId: 'x',
 			status: 'opened',
@@ -61,6 +71,20 @@ describe('ShareButton', () => {
 	})
 })
 
+describe('ShareLink', () => {
+	it('renders a progressive share anchor with the built-in provider icon', () => {
+		const wrapper_link = mount(ShareLink, {
+			props: { provider: 'x', payload: payload_share },
+		})
+		const link_share = wrapper_link.get('a')
+
+		expect(link_share.attributes('href')).toContain('https://x.com/intent/tweet')
+		expect(link_share.attributes('target')).toBe('_blank')
+		expect(link_share.attributes('rel')).toContain('noopener')
+		expect(link_share.find('svg').exists()).toBe(true)
+	})
+})
+
 describe('ShareGroup', () => {
 	it('renders a labelled group with recommended providers', () => {
 		const wrapper_group = mount(ShareGroup, {
@@ -76,15 +100,15 @@ describe('ShareGroup', () => {
 })
 
 describe('ShareMenu', () => {
-	it('uses an accessible trigger while deferring menu behavior to Reka UI', () => {
+	it('uses a native disclosure with an accessible trigger', () => {
 		const wrapper_menu = mount(ShareMenu, {
 			props: { payload: payload_share },
 		})
-		const trigger_menu = wrapper_menu.get('button')
+		const trigger_menu = wrapper_menu.get('summary')
 
-		expect(trigger_menu.attributes('type')).toBe('button')
 		expect(trigger_menu.attributes('aria-label')).toBe('Open share menu')
 		expect(trigger_menu.text()).toContain('Share')
+		expect(wrapper_menu.findAll('[role="group"] button')).toHaveLength(6)
 	})
 })
 

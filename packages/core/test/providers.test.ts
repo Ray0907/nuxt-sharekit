@@ -33,6 +33,7 @@ describe('provider registry', () => {
 			'whatsapp',
 			'telegram',
 			'line',
+			'viber',
 			'email',
 			'sms',
 			'weibo',
@@ -41,6 +42,11 @@ describe('provider registry', () => {
 			'xing',
 			'instapaper',
 			'raindrop',
+			'chatgpt',
+			'claude',
+			'gemini',
+			'perplexity',
+			'grok',
 		])
 		expect(ids_provider).not.toContain('copy')
 		expect(ids_provider).not.toContain('native')
@@ -67,6 +73,7 @@ describe('payload normalization', () => {
 			text: '  Ready to share  ',
 			hashtags: ['#Nuxt', 'Nuxt', '  Vue  ', ''],
 			via: '@sharekit',
+			prompt: '  Explain this page:  ',
 		}, 'https://example.com/docs/')
 
 		expect(payload_normalized).toEqual({
@@ -75,6 +82,7 @@ describe('payload normalization', () => {
 			text: 'Ready to share',
 			hashtags: ['Nuxt', 'Vue'],
 			via: 'sharekit',
+			prompt: 'Explain this page:',
 		})
 	})
 
@@ -139,6 +147,29 @@ describe('share intents', () => {
 		expect(intent_email?.url).toContain('mailto:?')
 		expect(intent_sms).toMatchObject({ target: 'same-tab' })
 		expect(intent_sms?.url).toContain('sms:?')
+	})
+
+	it('supports competitor aliases without duplicating canonical providers', () => {
+		expect(createShareIntent('twitter', payload_complete)).toMatchObject({
+			providerId: 'x',
+		})
+		expect(createShareIntent('vkontakte', payload_complete)).toMatchObject({
+			providerId: 'vk',
+		})
+	})
+
+	it('builds Viber and opt-in AI destinations', () => {
+		const intent_viber = createShareIntent('viber', payload_complete)
+		const intent_claude = createShareIntent('claude', {
+			...payload_complete,
+			prompt: 'Review this:',
+		})
+
+		expect(intent_viber).toMatchObject({ target: 'same-tab' })
+		expect(intent_viber?.url).toContain('viber://forward?text=')
+		expect(new URL(intent_claude?.url ?? '').searchParams.get('q')).toBe(
+			'Review this: https://example.com/launch?ref=home',
+		)
 	})
 
 	it('returns undefined for unknown provider ids', () => {

@@ -35,7 +35,7 @@ useSeoMeta({
 				</h2>
 				<p class="mt-2 text-muted">
 					Framework-agnostic provider engine, Nuxt 4 module, accessible components,
-					Reka-powered menu, broad provider coverage, and the documentation workbench.
+					native disclosure menu, broad provider coverage, and the documentation workbench.
 				</p>
 			</div>
 		</section>

@@ -33,6 +33,10 @@ browser fallbacks, native sharing, copy link, and SSR-safe QR codes.
 The snapshot is captured from the real Nuxt 4 documentation app and component builder. GitHub
 automatically selects the matching light or dark version.
 
+The default runtime is also locked to this Playwright visual snapshot:
+
+![Default Nuxt ShareKit runtime controls](test/browser/replacement.spec.ts-snapshots/default-runtime.png)
+
 <details>
 <summary>View mobile snapshot</summary>
 <br>
@@ -54,6 +58,7 @@ automatically selects the matching light or dark version.
 - [Components](#components)
 - [Composable](#composable)
 - [Providers and presets](#providers-and-presets)
+- [Migration compatibility](#migration-compatibility)
 - [Custom providers](#custom-providers)
 - [Headless usage](#headless-usage)
 - [Theming](#theming)
@@ -65,7 +70,7 @@ automatically selects the matching light or dark version.
 
 ## Why ShareKit
 
-- **21 built-in providers:** social, professional, messaging, communication, and read-later
+- **27 built-in providers:** social, professional, messaging, communication, read-later, and AI
   destinations with typed capability metadata.
 - **Product-ready defaults:** calm semantic styling, light and dark themes, responsive layouts,
   and no Tailwind requirement for consumers.
@@ -73,16 +78,16 @@ automatically selects the matching light or dark version.
   system through props, slots, and custom provider registries.
 - **Accessible by contract:** semantic controls, keyboard navigation, visible focus, live result
   announcements, 44px targets, and reduced-motion support.
-- **Browser-aware actions:** provider intents, native Web Share, clipboard handling, blocked popup
-  detection, and explicit result states.
+- **Progressive by default:** real provider anchors work without JavaScript, while interactive
+  buttons add native Web Share, clipboard handling, popup detection, and result states.
 - **Nuxt-native integration:** automatic component registration, automatic `useShare` import,
   Nuxt 4 SSR support, and configurable component prefixes.
 - **Portable core:** `@nuxt-sharekit/core` has no Vue or Nuxt dependency and can power future
   framework adapters.
 
-Nuxt UI and Nuxt Content are intentionally not dependencies. `ShareMenu` uses Reka UI directly
-for accessible menu behavior. The documentation workbench uses Tailwind CSS v4, while the runtime
-package ships a small semantic stylesheet.
+Nuxt UI, Nuxt Content, Tailwind CSS, and Reka UI are intentionally not runtime dependencies.
+`ShareMenu` uses native disclosure semantics. The documentation workbench may use Tailwind CSS v4
+and Reka UI without imposing either package on applications that install `nuxt-sharekit`.
 
 ## Requirements
 
@@ -127,6 +132,10 @@ export default defineNuxtConfig({
 | --- | --- | --- | --- |
 | `componentPrefix` | `string` | `'Share'` | Prefix for all registered components. |
 | `styled` | `boolean` | `true` | Adds the packaged semantic stylesheet. |
+| `baseUrl` | `string` | `''` | Base URL used by the compatibility APIs. |
+| `label` | `boolean` | `true` | Compatibility component label default. |
+| `icon` | `boolean` | `true` | Compatibility component icon default. |
+| `compatibility` | `boolean` | `true` | Registers `SocialShare` and `useSocialShare`. |
 
 Changing the prefix to `Social` registers `SocialButton`, `SocialGroup`, `SocialMenu`, and
 `SocialQr`. Set `styled: false` when your application will provide every visual style.
@@ -183,6 +192,7 @@ interface SharePayload {
 	hashtags?: readonly string[]
 	via?: string
 	instance?: string
+	prompt?: string
 }
 ```
 
@@ -195,6 +205,7 @@ interface SharePayload {
 | `hashtags` | Tags with or without `#`; values are trimmed and de-duplicated. |
 | `via` | Attribution handle with or without `@`. |
 | `instance` | Mastodon instance URL, such as `https://mastodon.social`. |
+| `prompt` | Optional instruction prepended to AI provider URLs. |
 
 Payload normalization rejects non-HTTP protocols for web and media URLs. Provider parameters are
 encoded with `URLSearchParams` rather than string concatenation.
@@ -224,6 +235,21 @@ Executes one provider intent.
 
 Slots: `icon` receives `{ provider }`; default content receives `{ provider, pending }`.
 
+### `ShareLink`
+
+Renders a real share anchor during SSR, so the destination remains usable without JavaScript.
+
+```vue
+<ShareLink
+	provider="x"
+	:payload="payload_share"
+/>
+```
+
+It accepts the same provider definition, payload, label, and `unstyled` concepts as
+`ShareButton`, plus `baseUrl`, `rel`, `showIcon`, and `showLabel`. Popup providers use
+`target="_blank"` with a safe `rel`; Email, SMS, and Viber retain their native protocols.
+
 ### `ShareGroup`
 
 Renders provider buttons plus optional copy and native-share actions.
@@ -251,8 +277,7 @@ The `provider` slot receives `{ provider, payload }`. Every action emits `result
 
 ### `ShareMenu`
 
-Uses Reka UI's dropdown primitives for keyboard navigation, focus management, and portal
-positioning.
+Uses native `details` and `summary` semantics, with Escape-to-close and focus restoration.
 
 ```vue
 <ShareMenu
@@ -343,6 +368,7 @@ ShareKit includes these providers:
 | `whatsapp` | Messaging | URL, text | recommended, messaging | Active |
 | `telegram` | Messaging | URL, text | messaging | Active |
 | `line` | Messaging | URL | messaging | Active |
+| `viber` | Messaging | URL, title, text | messaging | Active |
 | `email` | Communication | URL, title, text | recommended, messaging | Active |
 | `sms` | Communication | URL, text | messaging | Active |
 | `weibo` | Social | URL, title, media | all | Active |
@@ -351,6 +377,11 @@ ShareKit includes these providers:
 | `xing` | Professional | URL | all | Active |
 | `instapaper` | Read later | URL, title, text | all | Active |
 | `raindrop` | Read later | URL, title | all | Active |
+| `chatgpt` | AI | URL, prompt | ask-ai, all | Active |
+| `claude` | AI | URL, prompt | ask-ai, all | Active |
+| `gemini` | AI | URL, prompt | ask-ai, all | Active |
+| `perplexity` | AI | URL, prompt | ask-ai, all | Active |
+| `grok` | AI | URL, prompt | ask-ai, all | Active |
 
 Available presets:
 
@@ -362,6 +393,7 @@ import {
 
 getSharePreset('recommended')
 getSharePreset('messaging')
+getSharePreset('ask-ai')
 getSharePreset('all')
 ```
 
@@ -384,6 +416,18 @@ Mastodon needs the user's instance because there is no single global compose end
 
 Provider endpoints are external contracts and can change. Each provider exposes `verifiedAt`
 metadata so audits can distinguish checked endpoints from assumptions.
+
+The [replacement matrix](docs/replacement-matrix.md) records coverage for all 24 upstream
+`nuxt-social-share` networks and explicit aliases. ShareKit adds SMS, Weibo, and Qzone.
+
+## Migration compatibility
+
+`SocialShare`, `useSocialShare`, the `socialShare` configuration key, and the `twitter` and
+`vkontakte` aliases are available by default. This allows existing applications to replace their
+module entry first and adopt ShareKit's richer APIs incrementally.
+
+See the complete [migration guide](docs/migration-from-nuxt-social-share.md). Disable the layer
+with `shareKit.compatibility: false` after the legacy calls are gone.
 
 ## Custom providers
 
@@ -513,7 +557,7 @@ interface ShareActionResult {
 The runtime targets WCAG 2.2 AA and includes:
 
 - Native buttons and a labelled group rather than clickable generic elements.
-- Reka UI menu keyboard navigation, focus management, and portal behavior.
+- Native disclosure keyboard behavior, Escape handling, and trigger focus restoration.
 - Visible `:focus-visible` outlines that do not rely on provider colors.
 - Minimum 44px control and menu-item targets.
 - `aria-busy`, disabled states, and polite live-region result announcements.
@@ -523,6 +567,10 @@ The runtime targets WCAG 2.2 AA and includes:
 
 Accessibility depends on the final application. If you use headless mode or replace slots, test
 names, focus order, contrast, target size, reduced motion, and status announcements again.
+
+The Playwright gate runs axe against WCAG A/AA tags, asserts the color-contrast rule executed,
+and separately verifies keyboard behavior in Chromium. This supports the runtime claim; it does
+not certify arbitrary consumer slot content.
 
 ## Architecture
 
@@ -554,15 +602,12 @@ pnpm dev
 pnpm dev:playground
 
 # Verification
-pnpm lint
-pnpm test
-pnpm typecheck
-pnpm build
+pnpm verify:replacement
 ```
 
 The workspace uses Node.js 22, pnpm 10, TypeScript, Vitest, ESLint, and Nuxt's module builder.
-CI runs install, lint, tests, typechecks, and production builds on pushes to `main` and pull
-requests.
+CI runs unit, Nuxt SSR, clean-install, browser interaction, no-JavaScript, keyboard, axe,
+typecheck, build, package-content, and screenshot checks.
 
 ### Test coverage
 
@@ -575,6 +620,8 @@ The current suite covers:
 - Copy, native share, popup, blocked, unsupported, and cancelled results.
 - Module registration, options, component behavior, and Nuxt 4 SSR integration.
 - Documentation homepage SSR output.
+- Chromium popup, copy, native, Email, SMS, no-JavaScript, keyboard, axe, and visual behavior.
+- Packed-package contents and a clean Nuxt 4 production build.
 
 ## Contributing and security
 
@@ -582,6 +629,8 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a change. For security is
 private reporting process in [SECURITY.md](SECURITY.md) instead of creating a public issue.
 
 Changes are tracked in [CHANGELOG.md](CHANGELOG.md).
+Release operations are tracked in the [release checklist](docs/release/release-checklist.md),
+including the prepared Nuxt Modules database entry.
 
 ## License
 

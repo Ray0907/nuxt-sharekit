@@ -26,11 +26,37 @@ interface ModuleDefinition {
 	defaults: {
 		componentPrefix: string
 		styled: boolean
+		baseUrl: string
+		label: boolean
+		icon: boolean
+		compatibility: boolean
 	}
 	setup: (
-		options: { componentPrefix: string, styled: boolean },
-		nuxt: { options: { css: string[] } },
+		options: {
+			componentPrefix: string
+			styled: boolean
+			baseUrl: string
+			label: boolean
+			icon: boolean
+			compatibility: boolean
+		},
+		nuxt: {
+			options: {
+				css: string[]
+				runtimeConfig: { public: Record<string, unknown> }
+				socialShare?: Record<string, unknown>
+			}
+		},
 	) => void
+}
+
+function createNuxtStub() {
+	return {
+		options: {
+			css: [] as string[],
+			runtimeConfig: { public: {} as Record<string, unknown> },
+		},
+	}
 }
 
 const definition_module = module_sharekit as unknown as ModuleDefinition
@@ -49,42 +75,73 @@ describe('Nuxt ShareKit module', () => {
 		expect(definition_module.defaults).toEqual({
 			componentPrefix: 'Share',
 			styled: true,
+			baseUrl: '',
+			label: true,
+			icon: true,
+			compatibility: true,
 		})
 	})
 
-	it('registers components, the composable, and optional styles', () => {
-		const nuxt_stub = { options: { css: [] as string[] } }
+	it('registers components, compatibility, the composable, and styles', () => {
+		const nuxt_stub = createNuxtStub()
 
 		definition_module.setup(definition_module.defaults, nuxt_stub)
 
 		expect(mocks_kit.addComponent.mock.calls.map(call => call[0].name)).toEqual([
 			'ShareButton',
 			'ShareGroup',
+			'ShareLink',
 			'ShareMenu',
 			'ShareQr',
+			'SocialShare',
 		])
 		expect(mocks_kit.addImports).toHaveBeenCalledWith({
 			name: 'useShare',
 			as: 'useShare',
 			from: '/resolved/runtime/composables/useShare',
 		})
+		expect(mocks_kit.addImports).toHaveBeenCalledWith({
+			name: 'useSocialShare',
+			as: 'useSocialShare',
+			from: '/resolved/runtime/composables/useSocialShare',
+		})
 		expect(nuxt_stub.options.css).toEqual(['/resolved/runtime/sharekit.css'])
+		expect(nuxt_stub.options.runtimeConfig.public.shareKit).toEqual({
+			baseUrl: '',
+			styled: true,
+			label: true,
+			icon: true,
+		})
+		expect(nuxt_stub.options.runtimeConfig.public.socialShare).toEqual({
+			baseUrl: '',
+			styled: false,
+			label: true,
+			icon: true,
+		})
 	})
 
 	it('supports custom component prefixes and headless-only installation', () => {
-		const nuxt_stub = { options: { css: [] as string[] } }
+		const nuxt_stub = createNuxtStub()
 
 		definition_module.setup({
 			componentPrefix: 'Social',
 			styled: false,
+			baseUrl: '',
+			label: true,
+			icon: true,
+			compatibility: false,
 		}, nuxt_stub)
 
 		expect(mocks_kit.addComponent.mock.calls.map(call => call[0].name)).toEqual([
 			'SocialButton',
 			'SocialGroup',
+			'SocialLink',
 			'SocialMenu',
 			'SocialQr',
 		])
 		expect(nuxt_stub.options.css).toEqual([])
+		expect(mocks_kit.addImports).not.toHaveBeenCalledWith(
+			expect.objectContaining({ name: 'useSocialShare' }),
+		)
 	})
 })

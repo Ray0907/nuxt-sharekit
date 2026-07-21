@@ -8,11 +8,21 @@ export default createConfigForNuxt({
 			semi: false,
 		},
 	},
-}).append({
-	ignores: [
-		'**/.nuxt/**',
-		'**/.output/**',
-		'**/dist/**',
-		'**/coverage/**',
-	],
-})
+}).append(
+	{
+		ignores: [
+			'**/.nuxt/**',
+			'**/.output/**',
+			'**/dist/**',
+			'**/coverage/**',
+		],
+	},
+	{
+		files: ['packages/nuxt/src/runtime/provider-icons.ts'],
+		rules: {
+			'@stylistic/comma-dangle': 'off',
+			'@stylistic/quote-props': 'off',
+			'@stylistic/quotes': 'off',
+		},
+	},
+)

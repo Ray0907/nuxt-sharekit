@@ -3,6 +3,14 @@
 	"version": "0.1.0",
 	"description": "Framework-agnostic share intent engine for Nuxt ShareKit.",
 	"license": "MIT",
+	"author": "Ray Tien",
+	"homepage": "https://github.com/Ray0907/nuxt-sharekit#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Ray0907/nuxt-sharekit.git",
+		"directory": "packages/core"
+	},
+	"bugs": "https://github.com/Ray0907/nuxt-sharekit/issues",
 	"keywords": [
 		"share",
 		"social",
@@ -23,7 +31,8 @@
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"scripts": {
-		"build": "tsc -p tsconfig.build.json",
+		"build": "node scripts/build.mjs",
+		"prepack": "pnpm build",
 		"test": "vitest run",
 		"typecheck": "tsc --noEmit"
 	},

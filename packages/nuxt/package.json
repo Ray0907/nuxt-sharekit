@@ -3,6 +3,14 @@
 	"version": "0.1.0",
 	"description": "Accessible, headless-friendly social sharing for Nuxt 4.",
 	"license": "MIT",
+	"author": "Ray Tien",
+	"homepage": "https://github.com/Ray0907/nuxt-sharekit#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Ray0907/nuxt-sharekit.git",
+		"directory": "packages/nuxt"
+	},
+	"bugs": "https://github.com/Ray0907/nuxt-sharekit/issues",
 	"keywords": [
 		"nuxt",
 		"nuxt-module",
@@ -25,12 +33,12 @@
 	"scripts": {
 		"build": "nuxt-module-build build",
 		"dev": "nuxt-module-build build --stub",
+		"prepack": "pnpm build",
 		"test": "vitest run",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@nuxt-sharekit/core": "workspace:*",
-		"reka-ui": "2.10.1",
 		"uqr": "0.1.3"
 	},
 	"devDependencies": {

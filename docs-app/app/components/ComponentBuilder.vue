@@ -328,14 +328,7 @@ async function copyComponent(): Promise<void> {
 								:provider="id_provider"
 								:payload="payload_preview"
 								:unstyled="mode_component === 'headless'"
-							>
-								<template #icon>
-									<Icon
-										:name="getProviderIcon(id_provider)"
-										class="size-4"
-									/>
-								</template>
-							</ShareButton>
+							/>
 						</div>
 						<button
 							type="button"
@@ -415,7 +408,7 @@ async function copyComponent(): Promise<void> {
 				<div class="grid gap-4 md:grid-cols-2">
 					<div
 						v-for="item_a11y in [
-							['Keyboard', 'Native buttons and Reka-managed menu focus.'],
+							['Keyboard', 'Native buttons and disclosure focus behavior.'],
 							['Targets', 'Every interactive target is at least 44×44px.'],
 							['Announcements', 'Copy, share, blocked, and failure states use a live region.'],
 							['Motion', 'Reduced motion removes scale and popover movement.'],

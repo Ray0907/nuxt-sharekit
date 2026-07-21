@@ -1,17 +1,16 @@
-name: CI
+name: Release
 
 on:
-  pull_request:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  verify:
+  publish:
     runs-on: ubuntu-latest
+    environment: npm
     timeout-minutes: 30
 
     steps:
@@ -28,6 +27,7 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -35,5 +35,15 @@ jobs:
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: Verify replacement criteria
+      - name: Verify release candidate
         run: pnpm verify:replacement
+
+      - name: Publish core
+        run: pnpm --filter @nuxt-sharekit/core publish --access public --provenance --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish Nuxt module
+        run: pnpm --filter nuxt-sharekit publish --access public --provenance --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

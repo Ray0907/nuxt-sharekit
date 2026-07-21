@@ -6,6 +6,7 @@ import type {
 } from '@nuxt-sharekit/core'
 import { computed, ref } from 'vue'
 import { useShare } from '../composables/useShare'
+import ProviderIcon from './ProviderIcon.vue'
 
 const props = withDefaults(defineProps<{
 	provider: string
@@ -73,13 +74,12 @@ async function handleShare(): Promise<void> {
 				name="icon"
 				:provider="provider_share"
 			>
-				<span
+				<ProviderIcon
 					v-if="provider_share"
-					class="sharekit-button__mark"
-					aria-hidden="true"
-				>
-					{{ provider_share.label.slice(0, 1) }}
-				</span>
+					class="sharekit-button__icon"
+					:name="provider_share.icon"
+					:fallback="provider_share.label"
+				/>
 			</slot>
 			<slot
 				v-if="provider_share"
