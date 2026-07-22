@@ -434,6 +434,31 @@ module entry first and adopt ShareKit's richer APIs incrementally.
 See the complete [migration guide](docs/migration-from-nuxt-social-share.md). Disable the layer
 with `shareKit.compatibility: false` after the legacy calls are gone.
 
+### Popup sharing
+
+`SocialShare` opens in a new tab by default, matching `nuxt-social-share`. Set `popup` to open a
+sized, opener-isolated share window instead. Email, SMS, and Viber keep their native protocols
+regardless.
+
+```vue
+<SocialShare
+	network="x"
+	popup
+	:window-width="600"
+	:window-height="480"
+	@share="onShare"
+	@blocked="onBlocked"
+/>
+```
+
+| Prop / Event | Type | Default | Description |
+| --- | --- | --- | --- |
+| `popup` | `boolean` | `false` | Open a share popup instead of a new tab. |
+| `windowWidth` | `number` | `640` | Popup width in pixels. |
+| `windowHeight` | `number` | `560` | Popup height in pixels. |
+| `@share` | `MouseEvent` | — | Fires on click; call `preventDefault()` to cancel the share. |
+| `@blocked` | — | — | Fires when the browser blocks the popup; fall back to copy. |
+
 ## Custom providers
 
 Custom providers are validated and isolated in an explicit registry.

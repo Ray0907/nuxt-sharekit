@@ -61,3 +61,24 @@ an explicit instance remains available through the new ShareKit payload.
 The new ShareKit components are styled by default. The compatibility
 `SocialShare` component preserves the upstream unstyled default unless
 `socialShare.styled` is enabled.
+
+## Popup sharing
+
+`SocialShare` keeps the upstream new-tab behavior by default. Opt into a sized,
+opener-isolated popup with the `popup` prop, tune it with `window-width` and
+`window-height`, and react to lifecycle events:
+
+```vue
+<SocialShare
+	network="x"
+	popup
+	:window-width="600"
+	:window-height="480"
+	@share="track"
+	@blocked="offerCopyFallback"
+/>
+```
+
+The `@share` event fires on click and can `preventDefault()` to cancel. `@blocked`
+fires when the browser suppresses the popup, so you can fall back to copy. Email,
+SMS, and Viber ignore `popup` and keep their native protocol handlers.

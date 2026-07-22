@@ -34,6 +34,7 @@ export interface LegacySocialShareNetwork {
 	}
 	color: string
 	category: 'social' | 'messaging' | 'ai' | 'bookmark' | 'other'
+	target: 'popup' | 'same-tab'
 }
 
 const options_default: LegacySocialShareOptions = { network: '' }
@@ -168,6 +169,7 @@ export function useSocialShare(
 			icon: icon_legacy,
 			color: colors_legacy[provider_share.id] || '#176b4d',
 			category: getLegacyCategory(provider_share.category),
+			target: intent_share.target,
 		}
 	})
 }

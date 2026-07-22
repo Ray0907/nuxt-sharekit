@@ -107,6 +107,18 @@ const payload_share = {
 				body: 'Generates an SSR-safe SVG QR code for the normalized share URL without adding a network provider.',
 				code: '<ShareQr :payload="payload_share" :size="192" />',
 			},
+			{
+				title: 'SocialShare popup',
+				body: 'The compatibility component opens a new tab by default. Add popup for a sized, opener-isolated window, and react to the share and blocked events. Email, SMS, and Viber keep their native protocols.',
+				code: `<SocialShare
+\tnetwork="x"
+\tpopup
+\t:window-width="600"
+\t:window-height="480"
+\t@blocked="offerCopyFallback"
+/>
+`,
+			},
 		],
 	},
 	{
