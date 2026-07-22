@@ -1,6 +1,6 @@
 {
 	"name": "@nuxt-sharekit/core",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Framework-agnostic share intent engine for Nuxt ShareKit.",
 	"license": "MIT",
 	"author": "Ray Tien",
