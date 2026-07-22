@@ -436,7 +436,7 @@ async function copyComponent(): Promise<void> {
 
 .builder-fieldset {
 	min-inline-size: 0;
-	padding: 1.25rem;
+	padding: 2.25rem 1.25rem 1.75rem;
 	border-block-end: 1px solid var(--site-line);
 }
 
@@ -535,6 +535,7 @@ async function copyComponent(): Promise<void> {
 	}
 
 	.builder-fieldset {
+		padding: 1.5rem 1.25rem;
 		border-inline-end: 1px solid var(--site-line);
 	}
 
