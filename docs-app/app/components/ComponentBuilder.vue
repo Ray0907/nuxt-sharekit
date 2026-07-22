@@ -125,13 +125,13 @@ async function copyComponent(): Promise<void> {
 			>
 				<div class="builder-grid">
 					<fieldset class="builder-fieldset">
-						<legend class="builder-label">
+						<p class="builder-label">
 							Source
 							<span
 								class="size-2 rounded-full bg-signal"
 								aria-hidden="true"
 							/>
-						</legend>
+						</p>
 						<label
 							class="sr-only"
 							for="source-page"
@@ -154,13 +154,13 @@ async function copyComponent(): Promise<void> {
 					</fieldset>
 
 					<fieldset class="builder-fieldset builder-compose">
-						<legend class="builder-label">
+						<p class="builder-label">
 							Compose
 							<span
 								class="size-2 rounded-full bg-signal"
 								aria-hidden="true"
 							/>
-						</legend>
+						</p>
 						<label
 							class="sr-only"
 							for="share-url"
@@ -196,13 +196,13 @@ async function copyComponent(): Promise<void> {
 					</fieldset>
 
 					<fieldset class="builder-fieldset builder-providers">
-						<legend class="builder-label">
+						<p class="builder-label">
 							Providers
 							<span
 								class="size-2 rounded-full bg-signal"
 								aria-hidden="true"
 							/>
-						</legend>
+						</p>
 						<ul class="flex flex-wrap gap-1.5">
 							<li
 								v-for="id_provider in ids_selected"
@@ -281,13 +281,13 @@ async function copyComponent(): Promise<void> {
 					</fieldset>
 
 					<fieldset class="builder-fieldset builder-options">
-						<legend class="builder-label">
+						<p class="builder-label">
 							Options
 							<span
 								class="size-2 rounded-full bg-signal"
 								aria-hidden="true"
 							/>
-						</legend>
+						</p>
 						<div
 							class="inline-flex rounded-control border border-line p-1"
 							role="radiogroup"
@@ -435,8 +435,10 @@ async function copyComponent(): Promise<void> {
 }
 
 .builder-fieldset {
+	display: flex;
+	flex-direction: column;
 	min-inline-size: 0;
-	padding: 2.25rem 1.25rem 1.75rem;
+	padding: 1.5rem 1.25rem;
 	border-block-end: 1px solid var(--site-line);
 }
 
@@ -444,6 +446,7 @@ async function copyComponent(): Promise<void> {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
+	padding: 0;
 	margin-block-end: 0.875rem;
 	color: var(--site-muted);
 	font-size: 0.75rem;
