@@ -6,7 +6,14 @@ import ShareGroup from '../src/runtime/components/ShareGroup.vue'
 import ShareLink from '../src/runtime/components/ShareLink.vue'
 import ShareMenu from '../src/runtime/components/ShareMenu.vue'
 import ShareQr from '../src/runtime/components/ShareQr.vue'
+import SocialShare from '../src/runtime/components/SocialShare.vue'
 import { useShare } from '../src/runtime/composables/useShare'
+
+vi.mock('nuxt/app', () => ({
+	useRoute: () => ({ fullPath: '/launch' }),
+	useRequestURL: () => new URL('https://example.com/launch'),
+	useRuntimeConfig: () => ({ public: { socialShare: {} } }),
+}))
 
 const payload_share = {
 	url: 'https://example.com/launch',
@@ -122,6 +129,69 @@ describe('ShareQr', () => {
 		expect(graphic_qr.attributes('role')).toBe('img')
 		expect(graphic_qr.attributes('aria-label')).toBe('QR code for Launch notes')
 		expect(graphic_qr.find('path').attributes('d')).toContain('M')
+	})
+})
+
+describe('SocialShare popup', () => {
+	it('opens an isolated popup and skips native anchor navigation', async () => {
+		const replace_location = vi.fn()
+		const popup_window = {
+			opener: window,
+			location: { replace: replace_location },
+		} as unknown as Window
+		const open_window = vi.spyOn(window, 'open').mockReturnValue(popup_window)
+		const wrapper_share = mount(SocialShare, {
+			props: { network: 'x', popup: true, windowWidth: 500, windowHeight: 400 },
+		})
+
+		const event_click = new MouseEvent('click', { cancelable: true })
+		wrapper_share.get('a').element.dispatchEvent(event_click)
+		await flushPromises()
+
+		expect(event_click.defaultPrevented).toBe(true)
+		expect(open_window).toHaveBeenCalledWith(
+			'',
+			'nuxt-sharekit-x',
+			'popup=yes,width=500,height=400',
+		)
+		expect(popup_window.opener).toBeNull()
+		expect(replace_location).toHaveBeenCalledWith(
+			expect.stringContaining('https://x.com/intent/tweet'),
+		)
+		expect(wrapper_share.emitted('share')).toHaveLength(1)
+	})
+
+	it('emits blocked when the popup is suppressed', async () => {
+		const open_window = vi.spyOn(window, 'open').mockReturnValue(null)
+		const wrapper_share = mount(SocialShare, {
+			props: { network: 'linkedin', popup: true },
+		})
+
+		await wrapper_share.get('a').trigger('click')
+		await flushPromises()
+
+		expect(open_window).toHaveBeenCalledOnce()
+		expect(wrapper_share.emitted('blocked')).toHaveLength(1)
+	})
+
+	it('leaves same-tab providers to the native anchor', async () => {
+		const open_window = vi.spyOn(window, 'open')
+		const wrapper_share = mount(SocialShare, {
+			props: { network: 'viber', popup: true },
+		})
+
+		// Record whether our handler prevented default, then block happy-dom from
+		// actually navigating the viber:// anchor (which throws on a null referrer).
+		let prevented_by_handler = false
+		wrapper_share.get('a').element.addEventListener('click', (event) => {
+			prevented_by_handler = event.defaultPrevented
+			event.preventDefault()
+		})
+		await wrapper_share.get('a').trigger('click')
+		await flushPromises()
+
+		expect(prevented_by_handler).toBe(false)
+		expect(open_window).not.toHaveBeenCalled()
 	})
 })
 

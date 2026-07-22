@@ -24,12 +24,47 @@ const props = withDefaults(defineProps<{
 	image?: string
 	rel?: string
 	prompt?: string
+	popup?: boolean
+	windowWidth?: number
+	windowHeight?: number
 }>(), {
 	styled: undefined,
 	label: undefined,
 	icon: undefined,
 	rel: 'nofollow noopener noreferrer',
+	popup: false,
+	windowWidth: 640,
+	windowHeight: 560,
 })
+
+const emit = defineEmits<{
+	share: [event: MouseEvent]
+	blocked: []
+}>()
+
+function onShareClick(event: MouseEvent) {
+	emit('share', event)
+	if (event.defaultPrevented) return
+	if (!props.popup) return
+	const url_share = network_selected.value?.shareUrl
+	if (!url_share || typeof window === 'undefined') return
+	// Same-tab providers (email, sms, viber) resolve their scheme handler natively.
+	if (network_selected.value?.target === 'same-tab') return
+
+	event.preventDefault()
+	const features_window = [
+		'popup=yes',
+		`width=${props.windowWidth}`,
+		`height=${props.windowHeight}`,
+	].join(',')
+	const popup_share = window.open('', `nuxt-sharekit-${props.network}`, features_window)
+	if (!popup_share) {
+		emit('blocked')
+		return
+	}
+	popup_share.opener = null
+	popup_share.location.replace(url_share)
+}
 
 const config_runtime = useRuntimeConfig()
 const options_runtime = computed(() => (
@@ -79,6 +114,7 @@ const label_long = computed(() => {
 		:aria-label="label_long"
 		:rel="rel"
 		target="_blank"
+		@click="onShareClick"
 	>
 		<template v-if="has_icon">
 			<slot name="icon">
@@ -132,11 +168,27 @@ const label_long = computed(() => {
 		color: white;
 		font-size: 0.875rem;
 		line-height: normal;
-		transition: background-color 0.25s ease-out;
+		transition:
+			background-color 0.25s ease-out,
+			transform 0.16s cubic-bezier(0.23, 1, 0.32, 1);
 	}
 
 	.social-share-button--styled:hover {
 		background-color: var(--color-hover);
+	}
+
+	.social-share-button--styled:active {
+		transform: scale(0.97);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.social-share-button--styled {
+			transition: background-color 0.25s ease-out;
+		}
+
+		.social-share-button--styled:active {
+			transform: none;
+		}
 	}
 
 	.social-share-button--styled:focus-visible {
