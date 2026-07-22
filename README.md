@@ -4,6 +4,7 @@
 [![Nuxt 4](https://img.shields.io/badge/Nuxt-4-00DC82?logo=nuxt&logoColor=white)](https://nuxt.com)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG_2.2-AA-176B4D)](https://www.w3.org/TR/WCAG22/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0F766E.svg)](LICENSE)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/raytien)
 
 Social sharing that fits your product. Beautiful defaults, headless when you need it.
 

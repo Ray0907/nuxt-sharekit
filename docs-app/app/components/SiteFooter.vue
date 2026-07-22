@@ -21,6 +21,14 @@
 				>
 					Provider status
 				</NuxtLink>
+				<a
+					href="https://buymeacoffee.com/raytien"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="hover:text-ink"
+				>
+					Buy me a coffee
+				</a>
 			</nav>
 		</div>
 	</footer>
