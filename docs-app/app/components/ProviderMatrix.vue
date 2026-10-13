@@ -22,6 +22,9 @@ const providers_visible = computed(() => {
 	return props.limit ? providers_all.slice(0, props.limit) : providers_all
 })
 
+const show_fallback = computed(() => new Set(providers_visible.value.map(p => p.fallback)).size > 1)
+const show_status = computed(() => new Set(providers_visible.value.map(p => p.status)).size > 1)
+
 function getStatusLabel(status_provider: string): string {
 	return status_provider === 'setup-required' ? 'Setup required' : 'Active'
 }
@@ -33,7 +36,7 @@ function supportsField(fields_provider: readonly string[], field_name: string): 
 
 <template>
 	<section
-		class="min-w-0 overflow-hidden rounded-panel border border-line bg-elevated"
+		class="min-w-0 overflow-hidden rounded-panel bg-elevated ring-1 ring-line"
 		aria-labelledby="providers-title"
 	>
 		<div
@@ -52,48 +55,50 @@ function supportsField(fields_provider: readonly string[], field_name: string): 
 		</div>
 
 		<div class="overflow-x-auto">
-			<table class="w-full min-w-4xl border-collapse text-left text-sm">
-				<thead class="bg-surface text-xs text-muted">
+			<table class="w-full border-collapse text-left text-sm">
+				<thead class="bg-surface text-xs text-ink">
 					<tr>
 						<th
 							scope="col"
-							class="px-5 py-3 font-medium"
+							class="px-5 py-3 font-semibold"
 						>
 							Provider
 						</th>
 						<th
 							scope="col"
-							class="px-4 py-3 font-medium"
+							class="hidden px-4 py-3 font-semibold md:table-cell"
 						>
 							Category
 						</th>
 						<th
 							scope="col"
-							class="px-4 py-3 text-center font-medium"
+							class="px-4 py-3 text-center font-semibold"
 						>
 							URL
 						</th>
 						<th
 							scope="col"
-							class="px-4 py-3 text-center font-medium"
+							class="px-4 py-3 text-center font-semibold"
 						>
 							Text
 						</th>
 						<th
 							scope="col"
-							class="px-4 py-3 text-center font-medium"
+							class="px-4 py-3 text-center font-semibold"
 						>
 							Media
 						</th>
 						<th
+							v-if="show_fallback"
 							scope="col"
-							class="px-4 py-3 font-medium"
+							class="hidden px-4 py-3 font-semibold md:table-cell"
 						>
 							Fallback
 						</th>
 						<th
+							v-if="show_status"
 							scope="col"
-							class="px-5 py-3 font-medium"
+							class="hidden px-5 py-3 font-semibold md:table-cell"
 						>
 							Status
 						</th>
@@ -107,7 +112,7 @@ function supportsField(fields_provider: readonly string[], field_name: string): 
 					>
 						<th
 							scope="row"
-							class="px-5 py-3 font-medium"
+							class="px-5 py-3.5 font-medium"
 						>
 							<span class="flex items-center gap-2.5">
 								<span class="grid size-7 place-items-center rounded-md bg-surface">
@@ -119,13 +124,13 @@ function supportsField(fields_provider: readonly string[], field_name: string): 
 								{{ provider_share.label }}
 							</span>
 						</th>
-						<td class="px-4 py-3 text-muted">
+						<td class="hidden px-4 py-3.5 text-muted md:table-cell">
 							{{ labels_category[provider_share.category] }}
 						</td>
 						<td
 							v-for="field_name in ['url', 'text', 'media']"
 							:key="field_name"
-							class="px-4 py-3 text-center"
+							class="px-4 py-3.5 text-center"
 						>
 							<Icon
 								:name="supportsField(provider_share.fields, field_name)
@@ -139,10 +144,16 @@ function supportsField(fields_provider: readonly string[], field_name: string): 
 									: `Does not support ${field_name}`"
 							/>
 						</td>
-						<td class="px-4 py-3 capitalize text-muted">
+						<td
+							v-if="show_fallback"
+							class="hidden px-4 py-3.5 capitalize text-muted md:table-cell"
+						>
 							{{ provider_share.fallback }}
 						</td>
-						<td class="px-5 py-3">
+						<td
+							v-if="show_status"
+							class="hidden px-5 py-3.5 md:table-cell"
+						>
 							<span
 								class="inline-flex items-center gap-2 text-muted"
 								:title="`Endpoint verified ${provider_share.verifiedAt}`"

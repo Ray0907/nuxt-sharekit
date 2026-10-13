@@ -142,6 +142,36 @@ pre {
 	list-style: disc;
 }
 
+.headless-demo {
+	display: grid;
+	gap: 0.5rem;
+}
+
+.headless-demo ul,
+.headless-demo > div {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.headless-demo button {
+	display: inline-flex;
+	min-block-size: 2.75rem;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.625rem 0.75rem;
+	border: 0;
+	border-block-end: 2px solid var(--site-action);
+	background: transparent;
+	color: var(--site-ink);
+	font: inherit;
+	font-size: 0.875rem;
+	font-weight: 600;
+}
+
 .code-block {
 	max-inline-size: 100%;
 	overflow-x: auto;

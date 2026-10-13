@@ -84,7 +84,7 @@ async function copyComponent(): Promise<void> {
 <template>
 	<section
 		id="builder"
-		class="scroll-mt-24 overflow-hidden rounded-panel border border-line bg-elevated shadow-panel"
+		class="scroll-mt-24 overflow-hidden rounded-panel bg-elevated ring-1 ring-line"
 		aria-labelledby="builder-title"
 	>
 		<TabsRoot v-model="tab_active">
@@ -127,10 +127,6 @@ async function copyComponent(): Promise<void> {
 					<fieldset class="builder-fieldset">
 						<p class="builder-label">
 							Source
-							<span
-								class="size-2 rounded-full bg-signal"
-								aria-hidden="true"
-							/>
 						</p>
 						<label
 							class="sr-only"
@@ -156,10 +152,6 @@ async function copyComponent(): Promise<void> {
 					<fieldset class="builder-fieldset builder-compose">
 						<p class="builder-label">
 							Compose
-							<span
-								class="size-2 rounded-full bg-signal"
-								aria-hidden="true"
-							/>
 						</p>
 						<label
 							class="sr-only"
@@ -168,7 +160,7 @@ async function copyComponent(): Promise<void> {
 						<div class="relative">
 							<Icon
 								name="lucide:link-2"
-								class="pointer-events-none absolute left-3 top-3.5 size-4 text-dimmed"
+								class="pointer-events-none absolute left-3 top-4 size-4 text-dimmed"
 							/>
 							<input
 								id="share-url"
@@ -198,10 +190,6 @@ async function copyComponent(): Promise<void> {
 					<fieldset class="builder-fieldset builder-providers">
 						<p class="builder-label">
 							Providers
-							<span
-								class="size-2 rounded-full bg-signal"
-								aria-hidden="true"
-							/>
 						</p>
 						<ul class="flex flex-wrap gap-1.5">
 							<li
@@ -210,7 +198,7 @@ async function copyComponent(): Promise<void> {
 							>
 								<button
 									type="button"
-									class="inline-flex min-h-11 items-center gap-2 rounded-control border border-line bg-surface px-2.5 text-sm hover:border-action"
+									class="inline-flex min-h-11 items-center gap-2 rounded-control border border-line bg-elevated px-2.5 text-sm hover:border-action"
 									:aria-label="`Remove ${getProviderLabel(id_provider)}`"
 									@click="removeProvider(id_provider)"
 								>
@@ -231,7 +219,7 @@ async function copyComponent(): Promise<void> {
 							<PopoverTrigger as-child>
 								<button
 									type="button"
-									class="mt-2 flex min-h-11 w-full items-center justify-between rounded-control border border-line px-3 text-left text-sm text-muted hover:border-action"
+									class="mt-2 flex min-h-12 w-full items-center justify-between rounded-control border border-line bg-elevated px-3 text-left text-sm text-muted hover:border-action"
 								>
 									Select providers…
 									<Icon
@@ -283,13 +271,9 @@ async function copyComponent(): Promise<void> {
 					<fieldset class="builder-fieldset builder-options">
 						<p class="builder-label">
 							Options
-							<span
-								class="size-2 rounded-full bg-signal"
-								aria-hidden="true"
-							/>
 						</p>
 						<div
-							class="inline-flex rounded-control border border-line p-1"
+							class="inline-flex rounded-control border border-line bg-surface p-1"
 							role="radiogroup"
 							aria-label="Component styling"
 						>
@@ -301,7 +285,7 @@ async function copyComponent(): Promise<void> {
 								:aria-checked="mode_component === mode_item"
 								class="min-h-9 rounded-md px-3 text-sm capitalize text-muted"
 								:class="mode_component === mode_item
-									? 'bg-surface font-medium text-accent'
+									? 'bg-[color-mix(in_oklch,var(--site-action)_10%,transparent)] font-medium text-accent'
 									: ''"
 								@click="mode_component = mode_item"
 							>
@@ -313,10 +297,6 @@ async function copyComponent(): Promise<void> {
 					<div class="builder-fieldset builder-output">
 						<p class="builder-label">
 							Live preview
-							<span
-								class="size-2 rounded-full bg-signal"
-								aria-hidden="true"
-							/>
 						</p>
 						<div
 							class="builder-preview"
@@ -332,7 +312,7 @@ async function copyComponent(): Promise<void> {
 						</div>
 						<button
 							type="button"
-							class="mt-4 inline-flex min-h-11 items-center gap-2 rounded-control bg-action px-4 text-sm font-semibold text-white hover:bg-action-hover"
+							class="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-control border border-line bg-elevated px-4 text-sm font-semibold hover:border-action sm:w-fit sm:self-end"
 							@click="copyComponent"
 						>
 							<Icon
@@ -347,33 +327,6 @@ async function copyComponent(): Promise<void> {
 						>
 							Clipboard access failed. Copy from the Code tab instead.
 						</p>
-					</div>
-				</div>
-
-				<div class="builder-path">
-					<div>
-						<span
-							class="builder-path__dot"
-							aria-hidden="true"
-						/>
-						<span><strong>Source</strong><small>Configured</small></span>
-					</div>
-					<div>
-						<span
-							class="builder-path__dot"
-							aria-hidden="true"
-						/>
-						<span>
-							<strong>Provider selection</strong>
-							<small>{{ ids_selected.length }} providers</small>
-						</span>
-					</div>
-					<div>
-						<span
-							class="builder-path__dot"
-							aria-hidden="true"
-						/>
-						<span><strong>Component</strong><small>Ready</small></span>
 					</div>
 				</div>
 			</TabsContent>
@@ -432,6 +385,7 @@ async function copyComponent(): Promise<void> {
 <style scoped>
 .builder-grid {
 	display: grid;
+	background: var(--site-surface);
 }
 
 .builder-fieldset {
@@ -457,7 +411,7 @@ async function copyComponent(): Promise<void> {
 
 .builder-input {
 	inline-size: 100%;
-	min-block-size: 2.75rem;
+	min-block-size: 3rem;
 	padding: 0.625rem 0.75rem;
 	border: 1px solid var(--site-line);
 	border-radius: 0.5rem;
@@ -467,12 +421,20 @@ async function copyComponent(): Promise<void> {
 	font-size: 0.875rem;
 }
 
-.builder-input:focus {
-	border-color: var(--site-focus);
+.builder-input:focus-visible {
+	outline: none;
+	border-color: var(--site-action);
+	box-shadow: 0 0 0 1px var(--site-action);
 }
 
 .builder-input--icon {
 	padding-inline-start: 2.25rem;
+}
+
+.builder-output {
+	border-block-start: 1px solid var(--site-line);
+	border-block-end: 0;
+	background: var(--site-elevated);
 }
 
 .builder-preview {
@@ -497,41 +459,6 @@ async function copyComponent(): Promise<void> {
 	font-weight: 600;
 }
 
-.builder-path {
-	display: grid;
-	gap: 1rem;
-	padding: 1rem 1.25rem;
-	background: var(--site-surface);
-}
-
-.builder-path > div {
-	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-}
-
-.builder-path__dot {
-	inline-size: 0.5rem;
-	block-size: 0.5rem;
-	border-radius: 999px;
-	background: var(--site-action);
-}
-
-.builder-path span:last-child {
-	display: grid;
-	gap: 0.125rem;
-}
-
-.builder-path strong {
-	font-size: 0.8125rem;
-	font-weight: 600;
-}
-
-.builder-path small {
-	color: var(--site-muted);
-	font-size: 0.75rem;
-}
-
 @media (min-width: 48rem) {
 	.builder-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -544,10 +471,7 @@ async function copyComponent(): Promise<void> {
 
 	.builder-output {
 		grid-column: 1 / -1;
-	}
-
-	.builder-path {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		border-inline-end: 0;
 	}
 }
 
