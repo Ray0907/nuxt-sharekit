@@ -22,31 +22,27 @@ browser fallbacks, native sharing, copy link, and SSR-safe QR codes.
 <picture>
 	<source
 		media="(prefers-color-scheme: dark)"
-		srcset="docs/design/home-desktop-dark.png"
+		srcset="docs-app/public/readme/home-desktop-dark.png"
 	>
 	<source
 		media="(prefers-color-scheme: light)"
-		srcset="docs/design/home-desktop-light.png"
+		srcset="docs-app/public/readme/home-desktop-light.png"
 	>
 	<img
 		alt="Nuxt ShareKit documentation and interactive component builder"
-		src="docs/design/home-desktop-light.png"
+		src="docs-app/public/readme/home-desktop-light.png"
 	>
 </picture>
 
 The snapshot is captured from the real Nuxt 4 documentation app and component builder. GitHub
 automatically selects the matching light or dark version.
 
-The default runtime is also locked to this Playwright visual snapshot:
-
-![Default Nuxt ShareKit runtime controls](test/browser/replacement.spec.ts-snapshots/default-runtime.png)
-
 <details>
 <summary>View mobile snapshot</summary>
 <br>
 <img
 	alt="Nuxt ShareKit documentation on a mobile viewport"
-	src="docs/design/home-mobile-light.png"
+	src="docs-app/public/readme/home-mobile-light.png"
 	width="390"
 >
 </details>
@@ -423,8 +419,8 @@ screen directly:
 Provider endpoints are external contracts and can change. Each provider exposes `verifiedAt`
 metadata so audits can distinguish checked endpoints from assumptions.
 
-The [replacement matrix](docs/replacement-matrix.md) records coverage for all 24 upstream
-`nuxt-social-share` networks and explicit aliases. ShareKit adds SMS, Weibo, and Qzone.
+ShareKit covers all 24 upstream `nuxt-social-share` networks and explicit aliases, and adds SMS,
+Weibo, and Qzone.
 
 ## Migration compatibility
 
@@ -432,8 +428,7 @@ The [replacement matrix](docs/replacement-matrix.md) records coverage for all 24
 `vkontakte` aliases are available by default. This allows existing applications to replace their
 module entry first and adopt ShareKit's richer APIs incrementally.
 
-See the complete [migration guide](docs/migration-from-nuxt-social-share.md). Disable the layer
-with `shareKit.compatibility: false` after the legacy calls are gone.
+Disable the layer with `shareKit.compatibility: false` after the legacy calls are gone.
 
 ### Popup sharing
 
@@ -616,10 +611,6 @@ docs            Product, design, implementation, and visual reference material
 The separation keeps provider rules independent from UI rendering. Nuxt is the supported adapter;
 other adapters can reuse `@nuxt-sharekit/core` without importing Vue.
 
-Product decisions live in [PRODUCT.md](PRODUCT.md), visual rules in [DESIGN.md](DESIGN.md), and
-the approved reference mock is in
-[docs/design/nuxt-sharekit-homepage-mock.png](docs/design/nuxt-sharekit-homepage-mock.png).
-
 ## Development
 
 ```bash
@@ -661,8 +652,6 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a change. For security is
 private reporting process in [SECURITY.md](SECURITY.md) instead of creating a public issue.
 
 Changes are tracked in [CHANGELOG.md](CHANGELOG.md).
-Release operations are tracked in the [release checklist](docs/release/release-checklist.md),
-including the prepared Nuxt Modules database entry.
 
 ## License
 

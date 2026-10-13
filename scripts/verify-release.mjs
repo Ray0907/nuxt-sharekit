@@ -51,10 +51,6 @@ const files_required = [
 	'.github/workflows/ci.yml',
 	'.github/workflows/docs.yml',
 	'.github/workflows/release.yml',
-	'docs/migration-from-nuxt-social-share.md',
-	'docs/replacement-matrix.md',
-	'docs/release/nuxt-modules.yml',
-	'docs/release/release-checklist.md',
 	'test/browser/replacement.spec.ts-snapshots/default-runtime.png',
 ]
 
